@@ -34,20 +34,38 @@ TrainingComponentSearchRequest  = {
 
 # Once we search, we get a TrainingComponentSearchResult
 TrainingComponentSearchResult = client.service.Search(TrainingComponentSearchRequest)
+
 # Print the TrainingComponentSearchResult
 print(TrainingComponentSearchResult)
+
 # Write the TrainingComponentSearchResult to a file
-with open('TrainingComponentSearchResult.xml', 'w+') as f:
-    f.writelines(str(TrainingComponentSearchResult))
+# with open('TrainingComponentSearchResult.xml', 'w+') as f:
+#     f.writelines(str(TrainingComponentSearchResult))
+
+unit_count = 0
+qual_count = 0
+
+for tp in TrainingComponentSearchResult.Results.TrainingComponentSummary:
+    if tp.ComponentType[0] == 'Unit' and tp.IsCurrent == True:
+        print("UNIT:", tp.Code, tp.Title)
+        unit_count = unit_count + 1
+    if tp.ComponentType[0] == 'Qualification' and tp.IsCurrent == True:
+        print("QUAL:", tp.Code, tp.Title)
+        qual_count = qual_count + 1    
+
+print("Unit Count:", unit_count)
+print("Qual Count:", qual_count)
 
 # From there, we can send the results to the GetDetails method to get more info
 # The result is stored in a TrainingComponent
 TrainingComponent = client.service.GetDetails(TrainingComponentSearchResult.Results.TrainingComponentSummary)
+
 # Print the TrainingComponent
 print(TrainingComponent)
+
 # Write the TrainingComponent to a file
-with open('TrainingComponent.xml', 'w+') as f:
-    f.writelines(str(TrainingComponent))
+# with open('TrainingComponent.xml', 'w+') as f:
+#     f.writelines(str(TrainingComponent))
 
 # The actual details of the unit (elements, etc...) are stored in xml files. Go get it!
 for tc in TrainingComponent.Releases.Release[0].Files.ReleaseFile:
