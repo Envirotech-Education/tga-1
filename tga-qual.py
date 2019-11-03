@@ -18,7 +18,7 @@ base_url_for_xml_files = 'http://training.gov.au/TrainingComponentFiles/'
 
 #########################################
 # xml_url_to_dict(xml_url)
-# Given this bad boy a URL to an XML file, and it'll
+# Give this bad boy a URL to an XML file, and it'll
 # give you a dictionary populated form that XML file.
 # xmltodict doesn't seem to make it that nice...
 def xml_url_to_dict(xml_url):
@@ -106,13 +106,33 @@ def get_competence(code):
 
 
 #########################################
+# list_to_html(the_list, html_filename)
+# Takes a list of dictionaries, and creates a HTML table from it
+def list_of_dicts_to_html(the_list_of_dicts, html_filename):
+    html_output = "<table>"
+    for u in the_list_of_dicts:
+        html_output = html_output + "<tr>"
+        for d in u.values():
+            html_output = html_output + "<td>" + str(d) + "</td>"
+        html_output = html_output + "</tr>"
+    html_output = html_output + "</table>"
+
+    with open(html_filename, 'w+') as f:
+        f.writelines(html_output)
+
+    # print(html_output)
 
 
 
-qual = get_qualification("ICT30118")
-for unit in qual:
-    print(unit['core'], unit['code'], unit['title'])
+#########################################
 
+# qual = get_qualification("ICT30118")
+# for unit in qual:
+#     print(unit['core'], unit['code'], unit['title'])
+
+list_of_dicts_to_html(get_qualification("ICT30118"), "out.html")
 
 unit = get_competence("ICTWEB201")
-print(unit)
+# print(unit)
+with open("unit.json", 'w+') as f:
+    f.write(str(unit))
